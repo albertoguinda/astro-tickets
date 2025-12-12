@@ -1,0 +1,180 @@
+---
+import "../styles/global.css";
+import Navbar from "../components/layout/Navbar.astro"; // Re-import
+import Footer from "../components/layout/Footer.astro"; // Re-import
+import { ClientRouter } from "astro:transitions";
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImage?: string;
+  ogUrl?: string;
+}
+
+const {
+  title = "AstroTickets",
+  description = "La plataforma definitiva para tus eventos favoritos. Música, tecnología y experiencias inolvidables.",
+  ogTitle = "AstroTickets",
+  ogDescription = "La plataforma definitiva para tus eventos favoritos. Música, tecnología y experiencias inolvidables.",
+  ogImage = "/social_preview.jpg", // Default social sharing image
+  ogUrl = Astro.url.href, // Current page URL
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="es" data-theme="astroLight">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    {/* Open Graph / Facebook */}
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={ogUrl} />
+    <meta property="og:title" content={ogTitle} />
+    <meta property="og:description" content={ogDescription} />
+    <meta property="og:image" content={ogImage} />
+
+    {/* Twitter */}
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={ogUrl} />
+    <meta property="twitter:title" content={ogTitle} />
+    <meta property="twitter:description" content={ogDescription} />
+    <meta property="twitter:image" content={ogImage} />
+    
+    <ClientRouter />
+
+    <script is:inline>
+      // Theme Controller Logic
+      const initTheme = () => {
+        const getTheme = () => {
+          if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+            return localStorage.getItem('theme');
+          }
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return 'cyberpunk';
+          }
+          return 'winter';
+        };
+
+        const theme = getTheme();
+        document.documentElement.setAttribute('data-theme', theme);
+      };
+
+      // 1. Run on initial load
+      initTheme();
+
+      // 2. Run on view transition navigation (Essential for keeping theme)
+      document.addEventListener('astro:after-swap', initTheme);
+
+      // 3. Listen for theme changes from the UI (Re-attach listeners on new page load)
+      document.addEventListener('astro:page-load', () => {
+        const controllers = document.querySelectorAll('.theme-controller');
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        
+        controllers.forEach((input) => {
+          // Sync input state
+          if (input.value === currentTheme) {
+            input.checked = true;
+          }
+          
+          // Add change listener
+          input.addEventListener('change', (e) => {
+            const newTheme = e.target.value;
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+          });
+        });
+      });
+    </script>
+
+    <script>
+      import Lenis from 'lenis';
+      import { gsap } from "gsap";
+      import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // https://www.desmos.com/calculator/brs54l4emx
+        direction: 'vertical', // vertical, horizontal
+        gestureDirection: 'vertical', // vertical, horizontal, both
+        smooth: true,
+        mouseMultiplier: 1,
+        smoothTouch: false,
+        touchMultiplier: 2,
+        infinite: false,
+      })
+
+      lenis.on('scroll', ScrollTrigger.update)
+
+      gsap.ticker.add((time)=>{
+        lenis.raf(time * 1000)
+      })
+
+      gsap.ticker.lagSmoothing(0)
+    </script>
+  </head>
+  <body class="min-h-screen flex flex-col bg-base-100 text-base-content transition-colors duration-300">
+    <Navbar /> {/* Re-add */}
+    <main class="flex-grow container mx-auto px-4 py-8">
+      <slot />
+    </main>
+    <Footer /> {/* Re-add */}
+    
+    {/* Back to Top Button */}
+    <button 
+      id="back-to-top" 
+      class="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-primary text-primary-content shadow-lg shadow-primary/40 translate-y-20 opacity-0 transition-all duration-500 hover:scale-110 hover:-translate-y-1 focus:outline-none cursor-pointer"
+      aria-label="Volver arriba"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+      </svg>
+    </button>
+
+    <script is:inline>
+      // Back to Top Logic
+      const backToTopBtn = document.getElementById('back-to-top');
+      
+      const toggleBackToTop = () => {
+        if (window.scrollY > 300) {
+          backToTopBtn.classList.remove('translate-y-20', 'opacity-0');
+        } else {
+          backToTopBtn.classList.add('translate-y-20', 'opacity-0');
+        }
+      };
+
+      window.addEventListener('scroll', toggleBackToTop);
+      
+      backToTopBtn.addEventListener('click', () => {
+        // Use Lenis for smooth scroll if available, otherwise native
+        if (window.lenis) {
+          window.lenis.scrollTo(0);
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  /* Lenis & Scroll Fixes */
+  html.lenis, html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  html {
+    overscroll-behavior: none; /* Prevents rubber-banding/flicker at limits */
+  }
+</style>

@@ -1,0 +1,128 @@
+---
+import Layout from "../layouts/Layout.astro";
+import TicketControl from "../components/islands/TicketControl";
+import { Image } from 'astro:assets';
+
+// Mock Data for Tickets
+const tickets = [
+  {
+    id: "vip-001",
+    name: "VIP Experience - Neon Cyber",
+    description: "Acceso exclusivo, bebidas gratis y Meet & Greet.",
+    price: 150,
+    initialStock: 10,
+    type: "VIP",
+    image: "https://images.unsplash.com/photo-1545128485-c400e7702796?q=80&w=400&auto=format&fit=crop"
+  },
+  {
+    id: "gen-001",
+    name: "General Admission - Neon Cyber",
+    description: "Acceso al evento principal y zonas comunes.",
+    price: 45,
+    initialStock: 120,
+    type: "General",
+    image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=400&auto=format&fit=crop"
+  },
+  {
+    id: "early-001",
+    name: "Early Bird - Astro Jazz",
+    description: "Precio especial por compra anticipada. Limitado.",
+    price: 30,
+    initialStock: 5, // Low stock to demonstrate logic
+    type: "Early Bird",
+    image: "https://images.unsplash.com/photo-1511192336575-5a79af67a629?q=80&w=400&auto=format&fit=crop"
+  },
+  {
+    id: "rock-001",
+    name: "Thunder Rock Fest",
+    description: "El festival de rock más ruidoso del año.",
+    price: 60,
+    initialStock: 200,
+    type: "General",
+    image: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=400&auto=format&fit=crop"
+  },
+  {
+    id: "techno-001",
+    name: "Underground Bass Night",
+    description: "Techno industrial en un bunker secreto.",
+    price: 40,
+    initialStock: 80,
+    type: "Club",
+    image: "https://images.unsplash.com/photo-1557672172-298e090bd0f1?q=80&w=400&auto=format&fit=crop"
+  },
+  {
+    id: "chill-001",
+    name: "Sunset Chill Session",
+    description: "Música ambient al atardecer en la azotea.",
+    price: 25,
+    initialStock: 50,
+    type: "Chill",
+    image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=400&auto=format&fit=crop"
+  },
+  {
+    id: "art-001",
+    name: "Digital Art Gallery Pass",
+    description: "Acceso a la exposición inmersiva.",
+    price: 20,
+    initialStock: 100,
+    type: "Art",
+    image: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=400&auto=format&fit=crop"
+  },
+  {
+    id: "vip-jazz-001",
+    name: "VIP Table - Jazz Lounge",
+    description: "Mesa reservada para 4 personas con botella.",
+    price: 300,
+    initialStock: 4,
+    type: "VIP",
+    image: "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?q=80&w=400&auto=format&fit=crop"
+  },
+  {
+    id: "fest-002",
+    name: "Galactic Pop Festival",
+    description: "Los mayores hits del pop internacional.",
+    price: 80,
+    initialStock: 500,
+    type: "Festival",
+    image: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=400&auto=format&fit=crop"
+  }
+];
+---
+
+<Layout 
+  title="Entradas | AstroTickets"
+  description="Compra tus entradas para los eventos más esperados. Descubre disponibilidad y precios en AstroTickets."
+  ogTitle="Entradas para Eventos | AstroTickets"
+  ogDescription="Compra tus entradas para los eventos más esperados. Descubre disponibilidad y precios en AstroTickets."
+  ogImage="/social_preview.jpg"
+>
+  <div class="text-center mb-12">
+    <h1 class="text-4xl font-bold mb-4">Venta de Entradas</h1>
+    <p class="text-lg text-base-content/70">Selecciona tu experiencia ideal.</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+    {tickets.map((ticket) => (
+      <div class="card bg-base-100 shadow-xl overflow-hidden border border-base-200 hover:shadow-2xl transition-all duration-300 cursor-pointer group">
+        <figure class="h-48 relative overflow-hidden">
+           <Image src={ticket.image} alt={ticket.name} width={400} height={200} format={'webp'} class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110" />
+           <div class="absolute top-2 right-2 badge badge-secondary">{ticket.type}</div>
+        </figure>
+        <div class="card-body">
+          <h2 class="card-title text-xl">{ticket.name}</h2>
+          <p class="text-sm text-base-content/70 min-h-[40px]">{ticket.description}</p>
+          
+          {/* React Island for Interactivity */}
+          <TicketControl 
+            client:visible
+            id={ticket.id}
+            name={ticket.name}
+            price={ticket.price}
+            initialStock={ticket.initialStock}
+            image={ticket.image}
+          />
+        </div>
+      </div>
+    ))}
+  </div>
+</Layout>

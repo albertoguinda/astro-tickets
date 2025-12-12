@@ -1,0 +1,29 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="404 - Página no encontrada">
+  <div
+    class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-purple-500 via-purple-700 to-pink-400 p-8 text-center"
+  >
+    <div class="max-w-600px">
+      <div class="my-6">
+        <img
+          src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTdqdXRmYmJpcjhnY2NuZ3M4bWIxaHp3MzQyeTYyYjlnOG1mdTNyZCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/DePFjKORBjHA1OOJLG/giphy.gif"
+          alt="Osito 404"
+          class="max-w-sm w-full h-auto rounded-3xl shadow-2xl mx-auto"
+        />
+      </div>
+
+      <p class="text-xl text-white/90 mb-8 drop-shadow">
+        La página que buscas no existe
+      </p>
+      <a
+        href="/"
+        class="inline-block px-10 py-4 bg-white text-purple-500 font-bold rounded-full no-underline transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
+      >
+        Volver al inicio
+      </a>
+    </div>
+  </div>
+</Layout>

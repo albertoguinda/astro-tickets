@@ -1,0 +1,127 @@
+---
+import Layout from "../layouts/Layout.astro";
+import TicketControl from "../components/islands/TicketControl"; // We can reuse this or create a ProductControl
+import CartList from "../components/islands/CartList";
+import { Image } from 'astro:assets';
+
+// Mock Data for Merch
+const products = [
+  {
+    id: "tshirt-001",
+    name: "Astro Official T-Shirt",
+    description: "Algodón 100% orgánico con diseño exclusivo.",
+    price: 25,
+    initialStock: 100,
+    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=400&auto=format&fit=crop"
+  },
+  {
+    id: "hoodie-001",
+    name: "Cyber Hoodie Limited",
+    description: "Cálida y futurista. Edición limitada.",
+    price: 55,
+    initialStock: 50,
+    image: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=400&auto=format&fit=crop"
+  },
+  {
+    id: "cap-001",
+    name: "Festival Snapback",
+    description: "Protégete del sol con estilo.",
+    price: 20,
+    initialStock: 75,
+    image: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?q=80&w=400&auto=format&fit=crop"
+  },
+  {
+    id: "totebag-001",
+    name: "Eco Astro Bag",
+    description: "Reutilizable y resistente para tus compras.",
+    price: 15,
+    initialStock: 200,
+    image: "https://images.unsplash.com/photo-1597484661643-2f5fef640dd1?q=80&w=400&auto=format&fit=crop"
+  },
+  {
+    id: "vinyl-001",
+    name: "Neon Nights Vinyl",
+    description: "LP de colección con los mejores hits.",
+    price: 35,
+    initialStock: 30,
+    image: "https://images.unsplash.com/photo-1603048588665-791ca8aea617?q=80&w=400&auto=format&fit=crop"
+  },
+  {
+    id: "poster-001",
+    name: "2025 Tour Poster",
+    description: "Impresión de alta calidad (A2).",
+    price: 12,
+    initialStock: 150,
+    image: "https://images.unsplash.com/photo-1572947650440-e8a97ef053b2?q=80&w=400&auto=format&fit=crop"
+  },
+  {
+    id: "stickers-001",
+    name: "Holographic Sticker Pack",
+    description: "5 pegatinas brillantes para tu laptop.",
+    price: 8,
+    initialStock: 300,
+    image: "https://images.unsplash.com/photo-1572375992501-4b0892d50c69?q=80&w=400&auto=format&fit=crop"
+  },
+  {
+    id: "bottle-001",
+    name: "Metal Water Bottle",
+    description: "Mantén tu bebida fría por 24h.",
+    price: 22,
+    initialStock: 60,
+    image: "https://images.unsplash.com/photo-1589365278144-c9e705f843ba?q=80&w=400&auto=format&fit=crop"
+  }
+];
+---
+
+<Layout 
+  title="Tienda Oficial | AstroTickets"
+  description="Explora el merchandising oficial de AstroTickets. Encuentra ropa y accesorios exclusivos de tus eventos favoritos."
+  ogTitle="Merchandising Oficial | AstroTickets"
+  ogDescription="Explora el merchandising oficial de AstroTickets. Encuentra ropa y accesorios exclusivos de tus eventos favoritos."
+  ogImage="/social_preview.jpg"
+>
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold mb-4">Merchandising Oficial</h1>
+      <p class="text-lg text-base-content/70">Llévate un recuerdo del evento.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {/* Product Catalog (2/3 width on large screens) */}
+      <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {products.map((product) => (
+          <div class="card bg-base-100 shadow-xl border border-base-200 hover:shadow-2xl transition-all duration-300 cursor-pointer group">
+            <figure class="h-48 overflow-hidden">
+              <Image src={product.image} alt={product.name} width={400} height={200} format={'webp'} class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110" />
+            </figure>
+            <div class="card-body p-4">
+              <h2 class="card-title text-lg">{product.name}</h2>
+              <p class="text-sm text-base-content/70 mb-2">{product.description}</p>
+
+              {/* Reusing logic is good architecture */}
+              <TicketControl
+                client:visible
+                id={product.id}
+                name={product.name}
+                price={product.price}
+                initialStock={product.initialStock}
+                image={product.image}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Cart Summary (1/3 width, sticky on desktop, normal on mobile) */}
+      <div class="lg:col-span-1 order-first lg:order-last">
+        <div class="card bg-base-200 shadow-xl lg:sticky lg:top-24">
+          <div class="card-body">
+            <h2 class="card-title mb-4">Tu Carrito</h2>
+            {/* Interactive Cart List */}
+            <CartList client:load />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

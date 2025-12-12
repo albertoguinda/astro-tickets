@@ -1,0 +1,36 @@
+---
+import { Image } from 'astro:assets';
+interface Props {
+  title: string;
+  date: string;
+  price: number;
+  image: string;
+  href: string;
+}
+
+const { title, date, price, image, href } = Astro.props;
+---
+
+<a href={href} class="event-card card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 block h-full">
+  <figure class="h-48 overflow-hidden">
+    <Image
+      src={image}
+      alt={title}
+      width={400} // Example width, adjust as needed or make prop
+      height={200} // Example height, adjust as needed or make prop
+      format={'webp'} // Optimize to webp
+      class="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+    />
+  </figure>
+  <div class="card-body">
+    <h2 class="card-title">
+      {title}
+      <div class="badge badge-secondary">NEW</div>
+    </h2>
+    <p class="text-sm text-gray-500">{date}</p>
+    <div class="card-actions justify-between items-center mt-4">
+      <div class="badge badge-outline text-lg p-3">${price}</div>
+      <span class="btn btn-primary btn-sm">Comprar</span>
+    </div>
+  </div>
+</a>

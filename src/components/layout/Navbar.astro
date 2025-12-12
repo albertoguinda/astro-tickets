@@ -1,0 +1,159 @@
+---
+import NavbarCart from "../islands/NavbarCart";
+
+const links = [
+  { name: "Inicio", href: "/" },
+  { name: "Entradas", href: "/events" },
+  { name: "Tienda", href: "/merch" },
+  { name: "Comunidad", href: "/community" },
+  { name: "Mapa", href: "/location" },
+  { name: "Dashboard", href: "/admin/dashboard" },
+  { name: "Nosotros", href: "/about" },
+  { name: "Contacto", href: "/contact" },
+];
+
+const currentPath = Astro.url.pathname;
+
+const isActive = (href: string) => {
+  // Special handling for the root path
+  if (href === "/" && currentPath !== "/") {
+    return false;
+  }
+  // Check if current path starts with the link's href, for sub-routes
+  return currentPath.startsWith(href);
+};
+---
+
+<div class="navbar sticky top-0 z-50 bg-base-100/80 backdrop-blur-md shadow-sm transition-all duration-300">
+  <div class="navbar-start">
+    <div class="dropdown">
+      <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h8m-8 6h16" />
+        </svg>
+      </div>
+      <ul
+        tabindex="0"
+        class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+        {links.map((link) => (
+          <li class={isActive(link.href) ? "active" : ""}>
+            <a href={link.href}>{link.name}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+    <a href="/" class="btn btn-ghost text-xs sm:text-sm md:text-lg lg:text-xl font-bold px-1 sm:px-2 md:px-4 min-h-0 h-auto py-2 leading-relaxed overflow-visible">AstroTickets</a>
+  </div>
+  <div class="navbar-center hidden lg:flex">
+    <ul class="menu menu-horizontal px-1">
+      {links.map((link) => (
+        <li class={isActive(link.href) ? "active" : ""}>
+          <a href={link.href}>{link.name}</a>
+        </li>
+      ))}
+    </ul>
+  </div>
+  <div class="navbar-end gap-2">
+    {/* React Island: Cart Widget */}
+    <NavbarCart client:load />
+
+    {/* Theme Dropdown */}
+    <div class="dropdown dropdown-end">
+      <div tabindex="0" role="button" class="btn btn-ghost btn-circle text-2xl" id="theme-selector-btn">
+        {/* Sun Icon (Light) */}
+        <span id="icon-light" class="theme-icon hidden">☀️</span>
+        
+        {/* Snowflake Icon (Winter) */}
+        <span id="icon-winter" class="theme-icon hidden">❄️</span>
+
+        {/* Lemon Icon (Lemonade) */}
+        <span id="icon-lemonade" class="theme-icon hidden">🍋</span>
+
+        {/* Moon Icon (Cyberpunk) */}
+        <span id="icon-cyberpunk" class="theme-icon hidden">🌙</span>
+      </div>
+      <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-xl bg-base-100 rounded-box w-48 border border-base-200">
+        <li>
+          <div class="relative flex items-center p-0 hover:bg-base-200 rounded-lg overflow-hidden">
+            <input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-block btn-ghost justify-start font-medium px-4 z-10 cursor-pointer" aria-label="Claro" value="light" data-set-theme="light" />
+            <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-2xl z-20">
+              ☀️
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="relative flex items-center p-0 hover:bg-base-200 rounded-lg overflow-hidden">
+            <input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-block btn-ghost justify-start font-medium px-4 z-10 cursor-pointer" aria-label="Invierno" value="winter" data-set-theme="winter" />
+            <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-2xl z-20">
+               ❄️
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="relative flex items-center p-0 hover:bg-base-200 rounded-lg overflow-hidden">
+            <input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-block btn-ghost justify-start font-medium px-4 z-10 cursor-pointer" aria-label="Limonada" value="lemonade" data-set-theme="lemonade" />
+            <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-2xl z-20">
+              🍋
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="relative flex items-center p-0 hover:bg-base-200 rounded-lg overflow-hidden">
+            <input type="radio" name="theme-dropdown" class="theme-controller btn btn-sm btn-block btn-ghost justify-start font-medium px-4 z-10 cursor-pointer" aria-label="Cyberpunk" value="cyberpunk" data-set-theme="cyberpunk" />
+            <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-2xl z-20">
+              🌙
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  function updateThemeIcon() {
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'winter';
+    const icons = document.querySelectorAll('.theme-icon');
+    
+    // Hide all icons
+    icons.forEach(icon => icon.classList.add('hidden'));
+
+    // Show correct icon
+    const iconMap = {
+      'light': 'icon-light',
+      'winter': 'icon-winter',
+      'lemonade': 'icon-lemonade',
+      'cyberpunk': 'icon-cyberpunk'
+    };
+
+    const activeIconId = iconMap[currentTheme] || 'icon-winter';
+    const activeIcon = document.getElementById(activeIconId);
+    if (activeIcon) {
+        activeIcon.classList.remove('hidden');
+    }
+  }
+
+  // Run on initial load and view transitions
+  updateThemeIcon();
+  document.addEventListener('astro:after-swap', updateThemeIcon);
+  document.addEventListener('astro:page-load', () => {
+      // Also listen for manual changes via the dropdown
+      const controllers = document.querySelectorAll('.theme-controller');
+      controllers.forEach(ctrl => {
+          ctrl.addEventListener('change', () => {
+              // Small delay to allow attribute update
+              setTimeout(updateThemeIcon, 10);
+          });
+      });
+      updateThemeIcon(); // Ensure correct icon on page load
+  });
+</script>
