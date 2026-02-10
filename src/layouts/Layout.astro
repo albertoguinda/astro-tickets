@@ -1,0 +1,146 @@
+---
+import "../styles/global.css";
+import Navbar from "../components/layout/Navbar.astro"; // Re-import
+import Footer from "../components/layout/Footer.astro"; // Re-import
+import { ClientRouter } from "astro:transitions";
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImage?: string;
+  ogUrl?: string;
+}
+
+const {
+  title = "AstroTickets",
+  description = "La plataforma definitiva para tus eventos favoritos. Música, tecnología y experiencias inolvidables.",
+  ogTitle = "AstroTickets",
+  ogDescription = "La plataforma definitiva para tus eventos favoritos. Música, tecnología y experiencias inolvidables.",
+  ogImage = "/social_preview.jpg", // Default social sharing image
+  ogUrl = Astro.url.href, // Current page URL
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="es" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    {/* Open Graph / Facebook */}
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={ogUrl} />
+    <meta property="og:title" content={ogTitle} />
+    <meta property="og:description" content={ogDescription} />
+    <meta property="og:image" content={ogImage} />
+
+    {/* Twitter */}
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={ogUrl} />
+    <meta property="twitter:title" content={ogTitle} />
+    <meta property="twitter:description" content={ogDescription} />
+    <meta property="twitter:image" content={ogImage} />
+    
+    <ClientRouter />
+
+    <script is:inline>
+      // Inicializacion de tema — is:inline para ejecutarse antes del paint y evitar FOUC
+      const initTheme = () => {
+        const validThemes = ['light', 'winter', 'lemonade', 'cyberpunk'];
+        const getTheme = () => {
+          if (typeof localStorage !== 'undefined') {
+            const stored = localStorage.getItem('theme');
+            if (validThemes.includes(stored)) return stored;
+          }
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return 'cyberpunk';
+          }
+          return 'light';
+        };
+        document.documentElement.setAttribute('data-theme', getTheme());
+      };
+
+      // Ejecutar inmediatamente y en cada navegacion View Transitions
+      initTheme();
+      document.addEventListener('astro:after-swap', initTheme);
+    </script>
+
+    <script src="../scripts/smooth-scroll.js"></script>
+  </head>
+  <body class="min-h-screen flex flex-col bg-base-100 text-base-content transition-[background-color,color] duration-300">
+    {/* Skip Navigation Link - WCAG AAA */}
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[9999] focus:px-6 focus:py-3 focus:bg-primary focus:text-primary-content focus:rounded-lg focus:shadow-2xl focus:font-bold focus:text-lg"
+    >
+      Saltar al contenido principal
+    </a>
+
+    <Navbar /> {/* Re-add */}
+    <main id="main-content" class="flex-grow container mx-auto px-4 py-8">
+      <slot />
+    </main>
+    <Footer /> {/* Re-add */}
+    
+    {/* Back to Top Button */}
+    <button
+      id="back-to-top"
+      class="fixed bottom-6 right-6 z-50 p-4 min-w-14 min-h-14 rounded-full bg-primary text-primary-content shadow-2xl shadow-primary/30 translate-y-20 opacity-0 transition-all duration-500 hover:scale-110 hover:-translate-y-1 hover:shadow-primary/50 focus:outline-none cursor-pointer"
+      aria-label="Volver arriba"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+      </svg>
+    </button>
+
+    <script>
+      // Back to Top Logic
+      function setupBackToTop() {
+        const backToTopBtn = document.getElementById('back-to-top');
+        if (!backToTopBtn) return;
+
+        const toggleBackToTop = () => {
+          if (window.scrollY > 300) {
+            backToTopBtn.classList.remove('translate-y-20', 'opacity-0');
+          } else {
+            backToTopBtn.classList.add('translate-y-20', 'opacity-0');
+          }
+        };
+
+        window.addEventListener('scroll', toggleBackToTop);
+        toggleBackToTop(); // Check initial state
+
+        backToTopBtn.onclick = () => {
+          if (window.lenis) {
+            window.lenis.scrollTo(0);
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        };
+      }
+
+      setupBackToTop();
+      document.addEventListener('astro:page-load', setupBackToTop);
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  /* Lenis & Scroll Fixes */
+  html.lenis, html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  html {
+    overscroll-behavior: none; /* Prevents rubber-banding/flicker at limits */
+  }
+</style>

@@ -1,0 +1,31 @@
+---
+import { Image } from 'astro:assets';
+interface Props {
+  name: { first: string; last: string; title: string };
+  picture: { large: string };
+  comment: string; // Simulated comment
+}
+
+const { name, picture, comment } = Astro.props;
+---
+
+<div class="card bg-base-100 shadow-xl h-96 transition-transform duration-300 hover:scale-105 relative overflow-hidden group">
+  <figure class="h-full w-full">
+    <Image
+      src={picture.large}
+      alt={`${name.first} ${name.last}`}
+      width={400} 
+      height={400} 
+      format={'webp'} 
+      class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+    />
+  </figure>
+  <div class="absolute inset-0 bg-gradient-to-t from-black via-black/90 to-transparent flex flex-col justify-end p-6">
+    <h2 class="card-title text-white text-2xl font-bold drop-shadow-md">{name.first} {name.last}</h2>
+    <p class="text-white text-sm font-medium mt-2 leading-relaxed drop-shadow-sm">{comment}</p>
+    <div class="mt-4 flex justify-between items-center">
+      <div class="badge badge-primary badge-outline text-white border-white font-semibold">Miembro</div>
+      <span class="text-xs text-white">Hace 2 horas</span>
+    </div>
+  </div>
+</div>

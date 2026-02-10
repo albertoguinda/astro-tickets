@@ -1,0 +1,144 @@
+---
+import Layout from "../layouts/Layout.astro";
+import TicketControl from "../components/islands/TicketControl"; 
+import CartList from "../components/islands/CartList";
+import { Image } from 'astro:assets';
+
+// Imports de Imágenes
+import tshirtImg from '../assets/images/merch-tshirt.webp';
+import hoodieImg from '../assets/images/merch-hoodie.webp';
+import capImg from '../assets/images/merch-cap.webp';
+import bagImg from '../assets/images/merch-bag.webp';
+import vinylImg from '../assets/images/merch-vinyl.webp';
+import posterImg from '../assets/images/merch-poster.webp';
+import stickersImg from '../assets/images/merch-stickers.webp';
+import bottleImg from '../assets/images/merch-bottle.webp';
+
+// Mock Data for Merch
+// CORRECCIÓN: Usamos objetos importados sin .src
+const products = [
+  {
+    id: "tshirt-001",
+    name: "Astro Official T-Shirt",
+    description: "Algodón 100% orgánico con diseño exclusivo.",
+    price: 25,
+    initialStock: 100,
+    image: tshirtImg
+  },
+  {
+    id: "hoodie-001",
+    name: "Cyber Hoodie Limited",
+    description: "Cálida y futurista. Edición limitada.",
+    price: 55,
+    initialStock: 50,
+    image: hoodieImg
+  },
+  {
+    id: "cap-001",
+    name: "Festival Snapback",
+    description: "Protégete del sol con estilo.",
+    price: 20,
+    initialStock: 75,
+    image: capImg
+  },
+  {
+    id: "totebag-001",
+    name: "Eco Astro Bag",
+    description: "Reutilizable y resistente para tus compras.",
+    price: 15,
+    initialStock: 200,
+    image: bagImg
+  },
+  {
+    id: "vinyl-001",
+    name: "Neon Nights Vinyl",
+    description: "LP de colección con los mejores hits.",
+    price: 35,
+    initialStock: 30,
+    image: vinylImg
+  },
+  {
+    id: "poster-001",
+    name: "2026 Tour Poster",
+    description: "Impresión de alta calidad (A2).",
+    price: 12,
+    initialStock: 150,
+    image: posterImg
+  },
+  {
+    id: "stickers-001",
+    name: "Holographic Sticker Pack",
+    description: "5 pegatinas brillantes para tu laptop.",
+    price: 8,
+    initialStock: 300,
+    image: stickersImg
+  },
+  {
+    id: "bottle-001",
+    name: "Metal Water Bottle",
+    description: "Mantén tu bebida fría por 24h.",
+    price: 22,
+    initialStock: 60,
+    image: bottleImg
+  }
+];
+---
+
+<Layout 
+  title="Tienda Oficial | AstroTickets"
+  description="Explora el merchandising oficial de AstroTickets. Encuentra ropa y accesorios exclusivos de tus eventos favoritos."
+  ogTitle="Merchandising Oficial | AstroTickets"
+  ogDescription="Explora el merchandising oficial de AstroTickets. Encuentra ropa y accesorios exclusivos de tus eventos favoritos."
+  ogImage="/social_preview.jpg"
+>
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold mb-4 text-base-content">Merchandising Oficial</h1>
+      <p class="text-lg text-base-content font-semibold opacity-100">Llévate un recuerdo del evento.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {/* Product Catalog */}
+      <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {products.map((product) => (
+          <div class="card bg-base-100 shadow-xl border border-base-200 hover:shadow-2xl transition-all duration-300 cursor-pointer group">
+            <figure class="h-48 overflow-hidden">
+              {/* Astro Image: Recibe OBJETO */}
+              <Image 
+                src={product.image} 
+                alt={product.name} 
+                width={400} 
+                height={200} 
+                class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110" 
+              />
+            </figure>
+            <div class="card-body p-4">
+              <h2 class="card-title text-lg">{product.name}</h2>
+              <p class="text-sm text-base-content font-medium mb-2">{product.description}</p>
+
+              {/* React Component: Recibe STRING */}
+              <TicketControl
+                client:visible
+                id={product.id}
+                name={product.name}
+                price={product.price}
+                initialStock={product.initialStock}
+                image={product.image.src}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Cart Summary */}
+      <div class="lg:col-span-1 order-first lg:order-last">
+        <div class="card bg-base-200 shadow-xl lg:sticky lg:top-24">
+          <div class="card-body">
+            <h2 class="card-title mb-4">Tu Carrito</h2>
+            <CartList client:load />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

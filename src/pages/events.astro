@@ -1,0 +1,149 @@
+---
+import Layout from "../layouts/Layout.astro";
+import TicketControl from "../components/islands/TicketControl"; 
+import { Image } from 'astro:assets';
+
+// Imports de Imágenes (Objetos ESM)
+import vipImg from '../assets/images/event-neon-cyber.webp';
+import genImg from '../assets/images/hero-stage-lights.webp';
+import earlyImg from '../assets/images/ticket-early-bird.webp';
+import rockImg from '../assets/images/community-footer.webp';
+import technoImg from '../assets/images/event-techno-pulse.webp';
+import chillImg from '../assets/images/event-sunset-chill.webp';
+import artImg from '../assets/images/event-digital-art.webp';
+import jazzVipImg from '../assets/images/event-jazz-night.webp';
+import festImg from '../assets/images/community-footer.webp'; 
+
+// Mock Data for Tickets
+// CORRECCIÓN: Asignamos el objeto importado DIRECTAMENTE, sin .src
+const tickets = [
+  {
+    id: "vip-001",
+    name: "VIP Experience - Neon Cyber",
+    description: "Acceso exclusivo, bebidas gratis y Meet & Greet.",
+    price: 10,
+    initialStock: 10,
+    type: "VIP",
+    image: vipImg
+  },
+  {
+    id: "gen-001",
+    name: "General Admission - Neon Cyber",
+    description: "Acceso al evento principal y zonas comunes.",
+    price: 15,
+    initialStock: 120,
+    type: "General",
+    image: genImg
+  },
+  {
+    id: "early-001",
+    name: "Early Bird - Astro Jazz",
+    description: "Precio especial por compra anticipada. Limitado.",
+    price: 10,
+    initialStock: 5, 
+    type: "Early Bird",
+    image: earlyImg
+  },
+  {
+    id: "rock-001",
+    name: "Thunder Rock Fest",
+    description: "El festival de rock más ruidoso del año.",
+    price: 20,
+    initialStock: 200,
+    type: "General",
+    image: rockImg
+  },
+  {
+    id: "techno-001",
+    name: "Underground Bass Night",
+    description: "Techno industrial en un bunker secreto.",
+    price: 15,
+    initialStock: 80,
+    type: "Club",
+    image: technoImg
+  },
+  {
+    id: "chill-001",
+    name: "Sunset Chill Session",
+    description: "Música ambient al atardecer en la azotea.",
+    price: 20,
+    initialStock: 50,
+    type: "Chill",
+    image: chillImg
+  },
+  {
+    id: "art-001",
+    name: "Digital Art Gallery Pass",
+    description: "Acceso a la exposición inmersiva.",
+    price: 20,
+    initialStock: 100,
+    type: "Art",
+    image: artImg
+  },
+  {
+    id: "vip-jazz-001",
+    name: "VIP Table - Jazz Lounge",
+    description: "Mesa reservada para 4 personas con botella.",
+    price: 50,
+    initialStock: 4,
+    type: "VIP",
+    image: jazzVipImg
+  },
+  {
+    id: "fest-002",
+    name: "Galactic Pop Festival",
+    description: "Los mayores hits del pop internacional.",
+    price: 80,
+    initialStock: 500,
+    type: "Festival",
+    image: festImg
+  }
+];
+---
+
+<Layout 
+  title="Entradas | AstroTickets"
+  description="Compra tus entradas para los eventos más esperados. Descubre disponibilidad y precios en AstroTickets."
+  ogTitle="Entradas para Eventos | AstroTickets"
+  ogDescription="Compra tus entradas para los eventos más esperados. Descubre disponibilidad y precios en AstroTickets."
+  ogImage="/social_preview.jpg"
+>
+  <div class="text-center mb-12">
+    <h1 class="text-4xl font-bold mb-4 text-base-content">Venta de Entradas</h1>
+    <p class="text-lg text-base-content font-semibold opacity-100">Selecciona tu experiencia ideal.</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+    {tickets.map((ticket) => (
+      <div class="card bg-base-100 shadow-xl overflow-hidden border border-base-200 hover:shadow-2xl transition-all duration-300 cursor-pointer group">
+        <figure class="h-48 relative overflow-hidden">
+           {/* Astro Image: Recibe el OBJETO (ticket.image) */}
+           <Image 
+             src={ticket.image} 
+             alt={ticket.name} 
+             width={400} 
+             height={200}
+             format="avif"
+             quality={60}
+             class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110" 
+           />
+           <div class="absolute top-2 right-2 badge badge-secondary">{ticket.type}</div>
+        </figure>
+        <div class="card-body">
+          <h2 class="card-title text-xl">{ticket.name}</h2>
+          <p class="text-sm text-base-content font-medium min-h-[40px]">{ticket.description}</p>
+          
+          {/* React Component: Recibe STRING (ticket.image.src) */}
+          <TicketControl 
+            client:visible
+            id={ticket.id}
+            name={ticket.name}
+            price={ticket.price}
+            initialStock={ticket.initialStock}
+            image={ticket.image.src}
+          />
+        </div>
+      </div>
+    ))}
+  </div>
+</Layout>

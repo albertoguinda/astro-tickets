@@ -1,0 +1,38 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import DashboardCharts from "../../components/islands/DashboardCharts";
+---
+
+<Layout 
+  title="Dashboard Admin | AstroTickets"
+  description="Panel de administración de AstroTickets con métricas y estadísticas del sistema."
+  ogTitle="Dashboard de Administración | AstroTickets"
+  ogDescription="Panel de administración de AstroTickets con métricas y estadísticas del sistema."
+>
+  <div class="text-center mb-10 md:mb-16">
+    <h1 class="text-4xl md:text-6xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-r from-secondary to-primary">Admin Dashboard</h1>
+    <p class="text-lg md:text-xl text-base-content font-semibold opacity-90">Métricas en tiempo real, ventas y análisis de audiencia.</p>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 pb-12">
+    <!-- Dashboard Container with Glow -->
+    <div class="relative group rounded-3xl p-[2px] bg-gradient-to-br from-secondary via-primary to-accent bg-[length:200%_200%] animate-gradient-slow shadow-2xl">
+        <div class="absolute inset-0 bg-gradient-to-br from-secondary to-primary blur-2xl opacity-10 group-hover:opacity-20 transition-opacity duration-500"></div>
+        
+        <div class="relative bg-base-100/90 backdrop-blur-xl rounded-[1.4rem] p-6 md:p-8 border border-base-content/15">
+            <DashboardCharts client:only="react" />
+        </div>
+    </div>
+  </div>
+
+  <style>
+    @keyframes gradient-slow {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    .animate-gradient-slow {
+        animation: gradient-slow 10s ease infinite;
+    }
+  </style>
+</Layout>

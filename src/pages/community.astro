@@ -1,0 +1,140 @@
+---
+import Layout from "../layouts/Layout.astro";
+import CommunityCard from "../components/ui/CommunityCard.astro";
+
+// Imports
+import m1 from '../assets/images/profile-m1.webp';
+import m2 from '../assets/images/profile-m2.webp';
+import m3 from '../assets/images/profile-m3.webp';
+import m4 from '../assets/images/profile-m4.webp';
+import m5 from '../assets/images/profile-m5.webp';
+import m6 from '../assets/images/profile-m6.webp';
+
+import f1 from '../assets/images/profile-f1.webp';
+import f2 from '../assets/images/profile-f2.webp';
+import f3 from '../assets/images/profile-f3.webp';
+import f4 from '../assets/images/profile-f4.webp';
+import f5 from '../assets/images/profile-f5.webp';
+import f6 from '../assets/images/profile-f6.webp';
+
+// Fetch 6 mujeres y 6 hombres de la API RandomUser
+let femaleData = { results: [] as any[] };
+let maleData = { results: [] as any[] };
+try {
+  const femaleResponse = await fetch("https://randomuser.me/api/?results=6&gender=female&seed=astro-female");
+  const maleResponse = await fetch("https://randomuser.me/api/?results=6&gender=male&seed=astro-male");
+  femaleData = await femaleResponse.json();
+  maleData = await maleResponse.json();
+} catch (e) {
+  // API may fail during build — fallback to empty results
+}
+
+// High Quality Unsplash Portraits - 6 hombres y 6 mujeres únicos
+// CORRECCIÓN: Usamos los objetos importados directamente
+const malePortraits = [
+  m1,
+  m2,
+  m3,
+  m4,
+  m5,
+  m6
+];
+
+const femalePortraits = [
+  f1,
+  f2,
+  f3,
+  f4,
+  f5,
+  f6
+];
+
+// Nombres personalizados en español
+const femaleNames = [
+  { first: "María", last: "García" },
+  { first: "Carmen", last: "Rodríguez" },
+  { first: "Lucía", last: "Martínez" },
+  { first: "Ana", last: "López" },
+  { first: "Isabel", last: "Fernández" },
+  { first: "Sofía", last: "Sánchez" }
+];
+
+const maleNames = [
+  { first: "Carlos", last: "González" },
+  { first: "Javier", last: "Pérez" },
+  { first: "Antonio", last: "Ramírez" },
+  { first: "Miguel", last: "Torres" },
+  { first: "David", last: "Díaz" },
+  { first: "Pablo", last: "Ruiz" }
+];
+
+// Intercalar mujeres y hombres: mujer-hombre-mujer-hombre
+const users = [];
+for (let i = 0; i < 6; i++) {
+  const femaleResult = femaleData.results?.[i] || {};
+  const maleResult = maleData.results?.[i] || {};
+  // Añadir mujer
+  users.push({
+    ...femaleResult,
+    name: {
+      ...(femaleResult.name || {}),
+      first: femaleNames[i].first,
+      last: femaleNames[i].last
+    },
+    picture: { large: femalePortraits[i] }
+  });
+  // Añadir hombre
+  users.push({
+    ...maleResult,
+    name: {
+      ...(maleResult.name || {}),
+      first: maleNames[i].first,
+      last: maleNames[i].last
+    },
+    picture: { large: malePortraits[i] }
+  });
+}
+
+// Simulated comments for a more realistic feel
+const comments = [
+  "¡Gran evento! La organización fue impecable.",
+  "Conocí a gente increíble. ¡Ya espero el próximo!",
+  "La energía del lugar era contagiosa. Muy recomendado.",
+  "Experiencia inolvidable. El sonido y las luces, perfectos.",
+  "Una plataforma muy útil para encontrar eventos así.",
+  "Definitivamente volveré a usar AstroTickets.",
+  "Me encantó cada detalle. ¡Felicidades al equipo!",
+  "La comunidad aquí es fantástica. Sentí que encajaba al instante.",
+  "Realmente superó mis expectativas. ¡Impresionante!",
+  "Un día para recordar. Gracias por la música y la diversión.",
+];
+
+// Assign a random comment to each user
+const usersWithComments = users.map((user: any, index: number) => ({
+  ...user,
+  comment: comments[index % comments.length], // Cycle through comments
+}));
+---
+
+<Layout 
+  title="Comunidad | AstroTickets"
+  description="Conoce a los miembros de la vibrante comunidad de AstroTickets y descubre sus experiencias."
+  ogTitle="Comunidad AstroTickets"
+  ogDescription="Conoce a los miembros de la vibrante comunidad de AstroTickets y descubre sus experiencias."
+  ogImage="/social_preview.jpg"
+>
+  <div class="text-center mb-12">
+    <h1 class="text-4xl font-bold mb-4 text-base-content">Nuestra Comunidad</h1>
+    <p class="text-lg text-base-content font-semibold opacity-100">Conoce a algunos de nuestros asistentes más recientes.</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
+    {usersWithComments.map((user: any) => (
+      <CommunityCard
+        name={user.name}
+        picture={user.picture}
+        comment={user.comment}
+      />
+    ))}
+  </div>
+</Layout>

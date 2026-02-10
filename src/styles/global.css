@@ -1,0 +1,255 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+@theme {
+  /* Define custom breakpoints or other global theme settings if needed */
+}
+
+/* Custom Theme Definitions using CSS variables for DaisyUI 5+ */
+@layer base {
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  /* Custom scrollbar with theme colors */
+  ::-webkit-scrollbar {
+    width: 14px;
+    height: 14px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-base-200);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: 8px;
+    border: 3px solid var(--color-base-200);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-secondary);
+    border-width: 2px;
+  }
+
+  ::-webkit-scrollbar-thumb:active {
+    background: var(--color-accent);
+  }
+
+  /* Firefox scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary) var(--color-base-200);
+  }
+
+  /* Remove black color on click/active state */
+  a:active,
+  button:active,
+  label:active,
+  .dropdown li:active,
+  [role="button"]:active {
+    color: inherit !important;
+    background-color: inherit !important;
+  }
+
+  /* Accessibility: Ensure links in paragraphs are distinguishable */
+  p a {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-weight: 500;
+  }
+
+  /* Global Cursor Pointer for Interactive Elements */
+  a, 
+  button, 
+  input[type="submit"], 
+  input[type="button"], 
+  input[type="radio"], 
+  input[type="checkbox"], 
+  label, 
+  select, 
+  summary, 
+  [role="button"],
+  [role="radio"],
+  .card, 
+  .card figure,
+  .event-item,
+  .btn, 
+  .dropdown > div,
+  .swap,
+  img,
+  .badge,
+  a *,
+  button *,
+  [role="button"] *,
+  .btn * {
+    cursor: pointer !important;
+  }
+
+  :root {
+    /* Default to Astro Light colors if no theme is selected */
+    --color-base-100: #f3f4f6;
+    --color-base-200: #e5e7eb;
+    --color-base-300: #d1d5db;
+    --color-base-content: #1f2937;
+    --color-primary: #6366f1;
+    --color-primary-content: #ffffff;
+    --color-secondary: #8b5cf6;
+    --color-secondary-content: #ffffff;
+    --color-accent: #22d3ee;
+    --color-accent-content: #ffffff;
+  }
+
+  /* Astro Light Theme (Standard "Claro") */
+  [data-theme="light"] {
+    --color-base-100: #ffffff;
+    --color-base-200: #f3f4f6;
+    --color-base-300: #e5e7eb;
+    --color-base-content: #1f2937;
+    --color-primary: #570df8;
+    --color-primary-content: #ffffff;
+    --color-secondary: #f000b8;
+    --color-secondary-content: #ffffff;
+    --color-accent: #37cdbe;
+    --color-accent-content: #163835;
+    --color-neutral: #3d4451;
+    --color-neutral-content: #ffffff;
+  }
+
+  /* Cyberpunk Theme (Neon "Oscuro") */
+  [data-theme="cyberpunk"] {
+    --color-base-100: #120024; /* Deep Purple/Black */
+    --color-base-200: #1a0033;
+    --color-base-300: #2b004d;
+    --color-base-content: #ffeebb;
+    --color-primary: #c800c8; /* Neon Magenta (darkened for 4.9:1 AAA with white) */
+    --color-primary-content: #ffffff;
+    --color-secondary: #00ffff; /* Neon Cyan */
+    --color-secondary-content: #000000;
+    --color-accent: #ffbd00; /* Neon Yellow */
+    --color-accent-content: #000000;
+    --color-neutral: #2a2e37;
+    --color-neutral-content: #ffffff;
+  }
+
+  /* Winter Theme */
+  [data-theme="winter"] {
+    --color-base-100: #ffffff;
+    --color-base-200: #f4f7ff;
+    --color-base-300: #e2e8f4;
+    --color-base-content: #394e6a;
+    --color-primary: #047aff;
+    --color-primary-content: #ffffff;
+    --color-secondary: #463aa1;
+    --color-secondary-content: #ffffff;
+    --color-accent: #c149ad;
+    --color-accent-content: #ffffff;
+    --color-neutral: #021431;
+    --color-neutral-content: #ffffff;
+  }
+
+  /* Lemonade Theme (approximated based on DaisyUI lemonade) */
+  [data-theme="lemonade"] {
+    --color-base-100: #f9f7f0;
+    --color-base-200: #efeae6;
+    --color-base-300: #e6e2dd;
+    --color-base-content: #4b5563;
+    --color-primary: #559e2a; /* Greenish */
+    --color-primary-content: #ffffff;
+    --color-secondary: #e9e92f; /* Yellowish */
+    --color-secondary-content: #383808;
+    --color-accent: #e6d34a;
+    --color-accent-content: #383808;
+    --color-neutral: #1f2937;
+    --color-neutral-content: #ffffff;
+  }
+
+  /* WCAG AAA: Respect prefers-reduced-motion for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+
+    /* Disable GSAP animations */
+    .gsap-animated,
+    .hero-text-reveal,
+    .hero-subtext-reveal,
+    .hero-cta-wrapper,
+    .scroll-indicator,
+    .mobile-fade-in {
+      animation: none !important;
+      transition: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    /* Disable Lenis smooth scroll */
+    html.lenis,
+    html.lenis body {
+      scroll-behavior: auto !important;
+    }
+
+    /* Disable scale/transform hovers */
+    .hover\:scale-110:hover,
+    .hover\:scale-105:hover,
+    .group-hover\:scale-110 {
+      transform: none !important;
+    }
+
+    /* Keep essential transitions for UI feedback (very fast) */
+    button:hover,
+    a:hover,
+    input:focus,
+    select:focus,
+    textarea:focus {
+      transition-duration: 0.05s !important;
+    }
+  }
+}
+
+/* SweetAlert2 Custom Styles */
+.swal2-container {
+  z-index: 99999 !important;
+}
+
+.swal2-popup.swal2-custom-popup {
+  border-radius: 1.5rem !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+  font-family: inherit !important;
+}
+
+.swal2-title.swal2-custom-title {
+  font-size: 1.875rem !important;
+  font-weight: 700 !important;
+  color: #1f2937 !important;
+  margin-bottom: 1rem !important;
+}
+
+.swal2-html-container.swal2-custom-html {
+  margin: 0 !important;
+}
+
+.swal2-confirm.swal2-custom-button {
+  padding: 0.75rem 2rem !important;
+  border-radius: 0.75rem !important;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+  transition-property: transform, background-color, box-shadow !important;
+  transition-duration: 0.2s !important;
+}
+
+.swal2-confirm.swal2-custom-button:hover {
+  transform: scale(1.05) !important;
+}
+
+.swal2-backdrop-show {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+}
